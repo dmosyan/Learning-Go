@@ -26,5 +26,11 @@ func main() {
 	choice, _ := in.ReadString('\n')
 	choice = strings.TrimSpace(choice) // we don't know what to do with this yet
 
-	fmt.Println(menue)
+	for _, item := range menue {
+		fmt.Println(item.name)
+		fmt.Println(strings.Repeat("-", 10))
+		for size, price := range item.price {
+			fmt.Printf("\t%10s%10.2f\n", size, price)
+		}
+	}
 }
