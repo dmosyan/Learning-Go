@@ -45,6 +45,8 @@ loop:
 			menu = append(menu, menuItem{name: name, price: make(map[string]float64)})
 		case "q":
 			break loop
+		default:
+			fmt.Println("Unknown option")
 		}
 	}
 }
