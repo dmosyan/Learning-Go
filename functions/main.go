@@ -19,6 +19,7 @@ var menu = []menuItem{
 
 func main() {
 
+loop:
 	for {
 		in := bufio.NewReader(os.Stdin)
 
@@ -42,9 +43,8 @@ func main() {
 			fmt.Println("Please enter the name of the new item")
 			name, _ := in.ReadString('\n')
 			menu = append(menu, menuItem{name: name, price: make(map[string]float64)})
-
+		case "q":
+			break loop
 		}
-
 	}
-
 }
