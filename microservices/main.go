@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -38,5 +39,16 @@ func main() {
 type myHandler string
 
 func (mh myHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("X-Powered-By", "energetic gophers")
+
+	http.SetCookie(w, &http.Cookie{
+		Name:    "session-id",
+		Value:   "12345",
+		Expires: time.Now().Add(24 * time.Hour * 365),
+	})
+
+	w.WriteHeader(http.StatusAccepted)
+
 	fmt.Fprintln(w, string(mh))
+	fmt.Fprintln(w, r.Header)
 }
