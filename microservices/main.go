@@ -12,6 +12,17 @@ import (
 
 func main() {
 
+	http.HandleFunc("/servercontent", func(w http.ResponseWriter, r *http.Request) {
+		customersFile, err := os.Open("./testdata/customers.csv")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer customersFile.Close()
+		// ideally we should check when the file was modified and pass that as time value
+		// name value will not be used anyway (it checks the extension only)
+		http.ServeContent(w, r, "customersdata.csv", time.Now(), customersFile)
+	})
+
 	http.HandleFunc("/servefile", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Disposition", "attachment; filename=\"customers.csv\"")
 		http.ServeFile(w, r, "./testdata/customers.csv")
