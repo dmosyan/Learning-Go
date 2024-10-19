@@ -12,6 +12,11 @@ import (
 
 func main() {
 
+	http.HandleFunc("/servefile", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Disposition", "attachment; filename=\"customers.csv\"")
+		http.ServeFile(w, r, "./testdata/customers.csv")
+	})
+
 	http.HandleFunc("/service/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Customer Service")
 	})
