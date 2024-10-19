@@ -3,14 +3,32 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
 func main() {
 
-	http.Handle("/", myHandler("Customer Service"))
+	http.HandleFunc("/service/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Customer Service")
+	})
+
+	http.HandleFunc("/fprint/", func(w http.ResponseWriter, r *http.Request) {
+		customersFile, err := os.Open("./testdata/customers.csv")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer customersFile.Close()
+		data, err := io.ReadAll(customersFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Fprint(w, string(data))
+	})
 
 	var handlerFun http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, r.URL.String())
@@ -18,9 +36,7 @@ func main() {
 
 	http.HandleFunc("/url/", handlerFun)
 
-	http.HandleFunc("/service/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Customer Service")
-	})
+	http.Handle("/", myHandler("Customer Service"))
 
 	s := http.Server{
 		Addr: ":3000",
