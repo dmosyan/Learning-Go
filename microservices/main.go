@@ -12,6 +12,8 @@ import (
 
 func main() {
 
+	http.Handle("/files/", http.StripPrefix("/files/", http.FileServer(http.Dir("."))))
+
 	http.HandleFunc("/servercontent", func(w http.ResponseWriter, r *http.Request) {
 		customersFile, err := os.Open("./testdata/customers.csv")
 		if err != nil {
@@ -32,7 +34,7 @@ func main() {
 		fmt.Fprintln(w, "Customer Service")
 	})
 
-	http.HandleFunc("/fprint/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/fprint", func(w http.ResponseWriter, r *http.Request) {
 		customersFile, err := os.Open("./testdata/customers.csv")
 		if err != nil {
 			log.Fatal(err)
