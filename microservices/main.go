@@ -21,13 +21,16 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		defer customersFile.Close()
-		data, err := io.ReadAll(customersFile)
-		if err != nil {
-			log.Fatal(err)
-		}
+		// defer customersFile.Close()
+		// data, err := io.ReadAll(customersFile)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 
-		fmt.Fprint(w, string(data))
+		//fmt.Fprint(w, string(data))
+
+		// stream the data from the file to response
+		io.Copy(w, customersFile)
 	})
 
 	var handlerFun http.HandlerFunc = func(w http.ResponseWriter, r *http.Request) {
