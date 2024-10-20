@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/csv"
 	"encoding/json"
@@ -34,6 +35,33 @@ func main() {
 		w.Write(data)
 
 	})
+
+	http.HandleFunc("/customers/add", func(w http.ResponseWriter, r *http.Request) {
+		var c Customer
+		dec := json.NewDecoder(r.Body)
+		err := dec.Decode(&c)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		log.Print(c)
+	})
+
+	go func() {
+		time.Sleep(2 * time.Second)
+		log.Print("sending a POST request")
+		_, err := http.Post("http://localhost:3000/customers/add", "applicatino-json", bytes.NewBuffer([]byte(`
+			{
+				"id":			9999,
+				"firstName":	"Arthur",
+				"lastName":		"Dent",
+				"address":		"155 Country Lane, Cottington, England"
+			}
+		`)))
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	http.Handle("/files/", http.StripPrefix("/files/", http.FileServer(http.Dir("."))))
 
