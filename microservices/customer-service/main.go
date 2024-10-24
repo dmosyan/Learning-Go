@@ -55,7 +55,8 @@ func main() {
 				"id":			9999,
 				"firstName":	"Arthur",
 				"lastName":		"Dent",
-				"address":		"155 Country Lane, Cottington, England"
+				"address":		"155 Country Lane, Cottington, England",
+				"something":	"additional data"
 			}
 		`)))
 		if err != nil {
@@ -66,7 +67,7 @@ func main() {
 	http.Handle("/files/", http.StripPrefix("/files/", http.FileServer(http.Dir("."))))
 
 	http.HandleFunc("/servercontent", func(w http.ResponseWriter, r *http.Request) {
-		customersFile, err := os.Open("./testdata/customers.csv")
+		customersFile, err := os.Open("../testdata/customers.csv")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -78,7 +79,7 @@ func main() {
 
 	http.HandleFunc("/servefile", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Disposition", "attachment; filename=\"customers.csv\"")
-		http.ServeFile(w, r, "./testdata/customers.csv")
+		http.ServeFile(w, r, "../testdata/customers.csv")
 	})
 
 	http.HandleFunc("/service/", func(w http.ResponseWriter, r *http.Request) {
@@ -86,7 +87,7 @@ func main() {
 	})
 
 	http.HandleFunc("/fprint", func(w http.ResponseWriter, r *http.Request) {
-		customersFile, err := os.Open("./testdata/customers.csv")
+		customersFile, err := os.Open("../testdata/customers.csv")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -149,7 +150,7 @@ type Customer struct {
 }
 
 func readCustomers() ([]Customer, error) {
-	f, err := os.Open("./testdata/customers.csv")
+	f, err := os.Open("../testdata/customers.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
