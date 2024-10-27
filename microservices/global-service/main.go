@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/csv"
 	"encoding/json"
@@ -11,6 +12,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"time"
 )
 
 type Product struct {
@@ -43,6 +45,26 @@ func main() {
 	go func() {
 		scs.ListenAndServe()
 	}()
+
+	time.Sleep(1 * time.Second)
+
+	http.Post("http://localhost:5000/carts", "application/json", bytes.NewBufferString(`
+		{
+			"id": 1,
+			"customerId": 3,
+			"productIds": [ 1, 3 ]
+		}
+			`))
+
+	res, err := http.Get("http://localhost:5000/carts")
+	if err != nil {
+		log.Fatal(err)
+	}
+	data, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Response: ", string(data))
 
 	fmt.Println("services started, press < Enter > to shutdown")
 	fmt.Scanln()
@@ -148,9 +170,12 @@ func createCustomerService() *http.Server {
 					w.WriteHeader(http.StatusInternalServerError)
 					return
 				}
-				w.Header().Add("Content-type", "application/json")
-				w.Write(data)
+				if r.Method == http.MethodGet {
+					w.Header().Add("Content-type", "application/json")
+					w.Write(data)
+				}
 				return
+
 			}
 		}
 		w.WriteHeader(http.StatusNotFound)
