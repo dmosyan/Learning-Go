@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"log/slog"
 	"net/http"
+	"time"
 )
 
 type Cart struct {
@@ -15,16 +17,16 @@ type Cart struct {
 
 var nextID int = 1
 var carts = make([]Cart, 0)
+var cartMux = http.NewServeMux()
 
 func createShoppingCartService() *http.Server {
-	var cartMux = http.NewServeMux()
 
 	cartMux.HandleFunc("/carts", cartsHandler)
 
 	//wrap mux with loggingMiddleware
 	return &http.Server{
 		Addr:    ":5000",
-		Handler: cartMux,
+		Handler: &loggingMiddleware{next: cartMux},
 	}
 }
 
@@ -64,4 +66,21 @@ func cartsHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
+}
+
+type loggingMiddleware struct {
+	next http.Handler
+}
+
+func (ln loggingMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if ln.next == nil {
+		ln.next = cartMux
+	}
+
+	slog.Info(fmt.Sprintf("received %v request on route: %v", r.Method, r.URL.Path))
+	now := time.Now()
+
+	ln.next.ServeHTTP(w, r)
+
+	slog.Info(fmt.Sprintf("response generated for %v request on route: %v. Duration: %v", r.Method, r.URL.Path, time.Since(now)))
 }
