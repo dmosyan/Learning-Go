@@ -5,50 +5,48 @@ import (
 	"sync"
 )
 
-var msg string
 var wg sync.WaitGroup
 
-func updateMessage(s string) {
-	defer wg.Done()
-
-	msg = s
+type Income struct {
+	Source string
+	Amount int
 }
 
 func main() {
-	msg = "Hello, there!"
+	var bankBalance int
+	var balance sync.Mutex
 
-	wg.Add(2)
+	fmt.Printf("Initial bank balance: %d.00", bankBalance)
 
-	go updateMessage("Hello, world!")
-	go updateMessage("Hello, universe!")
+	incomes := []Income{
+		{Source: "Main job", Amount: 500},
+		{Source: "Gifts", Amount: 50},
+		{Source: "Part time job", Amount: 100},
+		{Source: "Investment", Amount: 25},
+	}
+
+	wg.Add(len(incomes))
+
+	for i, income := range incomes {
+
+		go func(i int, income Income) {
+
+			defer wg.Done()
+
+			for week := 1; week <= 52; week++ {
+				balance.Lock()
+				temp := bankBalance
+				temp += income.Amount
+				bankBalance = temp
+				balance.Unlock()
+
+				fmt.Printf("On week %d, you earned %d.00 amount from %s\n", week, income.Amount, income.Source)
+			}
+		}(i, income)
+	}
 
 	wg.Wait()
 
-	fmt.Println(msg)
+	fmt.Printf("Your final balance after 52 week is: %d.00\n", bankBalance)
+
 }
-
-// var msg string
-// var wg sync.WaitGroup
-
-// func updateMessage(s string, m *sync.Mutex) {
-// 	defer wg.Done()
-
-// 	m.Lock()
-// 	msg = s
-// 	m.Unlock()
-// }
-
-// func main() {
-// 	msg = "Hello, there!"
-
-// 	var mutex sync.Mutex
-
-// 	wg.Add(2)
-
-// 	go updateMessage("Hello, world!", &mutex)
-// 	go updateMessage("Hello, universe!", &mutex)
-
-// 	wg.Wait()
-
-// 	fmt.Println(msg)
-// }
