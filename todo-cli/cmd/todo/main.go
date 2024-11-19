@@ -30,39 +30,31 @@ func main() {
 	switch {
 	case *add:
 		todos.Add("sample todo")
-		err := todos.Store(todoFile)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
-			os.Exit(1)
-		}
+		executeStore(todos, todoFile)
 	case *complete > 0:
 		err := todos.Complete(*complete)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
-			os.Exit(1)
-		}
-
-		err = todos.Store(todoFile)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
-			os.Exit(1)
-		}
+		handleError(err)
+		executeStore(todos, todoFile)
 	case *del > 0:
 		err := todos.Delete(*del)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
-			os.Exit(1)
-		}
-
-		err = todos.Store(todoFile)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
-			os.Exit(1)
-		}
+		handleError(err)
+		executeStore(todos, todoFile)
 	case *list:
 		todos.Print()
 	default:
 		fmt.Fprintln(os.Stdout, "invalid command")
 		os.Exit(0)
 	}
+}
+
+func handleError(err error) {
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
+	}
+}
+
+func executeStore(todos *todo.Todos, todoFile string) {
+	err := todos.Store(todoFile)
+	handleError(err)
 }
