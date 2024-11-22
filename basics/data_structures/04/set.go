@@ -55,3 +55,15 @@ func Union(sets ...Set) (u Set) {
 	}
 	return
 }
+
+func Intersect(sets ...Set) (i Set) {
+	i = sets[0].Copy()
+	for k := range i.elements {
+		for _, set := range sets[1:] {
+			if !set.Has(k) {
+				i.Remove(k)
+			}
+		}
+	}
+	return
+}
