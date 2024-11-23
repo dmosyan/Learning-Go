@@ -67,3 +67,21 @@ func Intersect(sets ...Set) (i Set) {
 	}
 	return
 }
+
+func (s Set) Difference(t Set) Set {
+	for _, k := range t.elements {
+		if s.Has(k) {
+			delete(s.elements, k)
+		}
+	}
+	return s
+}
+
+func (s Set) IsSubset(t Set) bool {
+	for _, k := range s.elements {
+		if !t.Has(k) {
+			return false
+		}
+	}
+	return true
+}
