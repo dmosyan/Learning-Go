@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bufio"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
+	"strings"
 
 	"github.com/dmosyan/Learning-Go/todo-cli"
 )
@@ -29,7 +33,9 @@ func main() {
 
 	switch {
 	case *add:
-		todos.Add("sample todo")
+		task, err := getInput(os.Stdin, flag.Args()...)
+		handleError(err)
+		todos.Add(task)
 		executeStore(todos, todoFile)
 	case *complete > 0:
 		err := todos.Complete(*complete)
@@ -57,4 +63,24 @@ func handleError(err error) {
 func executeStore(todos *todo.Todos, todoFile string) {
 	err := todos.Store(todoFile)
 	handleError(err)
+}
+
+func getInput(r io.Reader, args ...string) (string, error) {
+
+	if len(args) > 0 {
+		return strings.Join(args, " "), nil
+	}
+
+	scanner := bufio.NewScanner(r)
+	scanner.Scan()
+	if err := scanner.Err(); err != nil {
+		return "", err
+	}
+
+	text := scanner.Text()
+	if len(text) == 0 {
+		return "", errors.New("emtpy todo is not allowed")
+	}
+
+	return text, nil
 }

@@ -18,9 +18,21 @@
     "CompletedAt": "0001-01-01T00:00:00Z"
   },
   {
-    "Task": "sample todo",
+    "Task": "take a walk",
     "Done": false,
     "CreatedAt": "2024-11-17T22:00:06.155865-05:00",
+    "CompletedAt": "0001-01-01T00:00:00Z"
+  },
+  {
+    "Task": "refactor code",
+    "Done": false,
+    "CreatedAt": "2024-11-25T16:24:19.158122-05:00",
+    "CompletedAt": "0001-01-01T00:00:00Z"
+  },
+  {
+    "Task": "sending another task from echo",
+    "Done": false,
+    "CreatedAt": "2024-11-25T16:25:43.773657-05:00",
     "CompletedAt": "0001-01-01T00:00:00Z"
   }
 ]
