@@ -8,7 +8,19 @@ List the packages <br />
 `go list -m -versions github.com/gorilla/mux` - to check available version from the remote repo <br />
 
 Verify dependency <br />
-`go mod verify` - all modules verified
+`go mod verify` - all modules verified <br />
+
+Get a specific version of a module <br />
+`go get github.com/gorilla/mux@v1.6.1` <br />
+
+Getting master will download not released version + pre-release identifier (github.com/gorilla/mux v1.8.1-0.20221209155657-eb99d7a67714) <br />
+`go get github.com/gorilla/mux@master` <br />
+We can also use "latest" or the closes match to the specified version <br />
+`go get 'github.com/gorilla/mux@<v1.7.0'"`
+
+
+
+
 
 
 
