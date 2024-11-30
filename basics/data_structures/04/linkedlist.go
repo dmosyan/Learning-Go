@@ -67,3 +67,19 @@ func (l *LinkedList[T]) Delete(el *Element[T]) error {
 
 	return errors.New("element not found")
 }
+
+func (l *LinkedList[T]) Find(value T) (el *Element[T], err error) {
+
+	for current := l.head; current != nil; current = current.next {
+		if current.value == value {
+			el = current
+			break
+		}
+	}
+	if el == nil {
+		err = errors.New("element not found")
+		return
+	}
+
+	return
+}
