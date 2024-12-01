@@ -83,3 +83,23 @@ func (l *LinkedList[T]) Find(value T) (el *Element[T], err error) {
 
 	return
 }
+
+func (l *LinkedList[T]) List() (list []*Element[T]) {
+
+	if l.head == nil {
+		return []*Element[T]{}
+	}
+
+	for current := l.head; current != nil; current = current.next {
+		list = append(list, current)
+	}
+
+	return
+}
+
+func (l *LinkedList[T]) IsEmpty() bool {
+	return l.size == 0
+}
+func (l *LinkedList[T]) Size() int {
+	return l.size
+}
