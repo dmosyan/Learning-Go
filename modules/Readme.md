@@ -28,6 +28,8 @@ Check the graph of the modules <br />
 `go mod edit go 1.23.1` - modify go version of the app <br /> 
 `go mod edit -replace github.com/gorilla/mux=../mux` - replace the module with the local copy <br />
 
+Use `go mod vendor` to create a local `vendor` directory that contains external dependencies. To use that run `go run -mod=vendor .` which will start using the dependencies from the `vendor` directory.
+
 
 
 
