@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/dmosyan/Learning-Go/apis/banking/app/internal/customer"
+	"github.com/dmosyan/Learning-Go/apis/banking/internal/customer"
 )
 
 func greetHandler(w http.ResponseWriter, r *http.Request) {
