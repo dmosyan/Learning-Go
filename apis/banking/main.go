@@ -1,14 +1,13 @@
 package main
 
-import "log"
-
-const port = "3000"
+import (
+	"github.com/dmosyan/Learning-Go/apis/banking/app"
+)
 
 func main() {
 
-	registerRoutes()
+	mux := app.RegisterRoutes()
 
-	log.Println("starting banking service on port", port)
-	startServer()
+	app.StartServer(mux)
 
 }

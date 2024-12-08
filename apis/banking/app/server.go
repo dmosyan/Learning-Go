@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"context"
@@ -7,14 +7,18 @@ import (
 	"net/http"
 )
 
-func startServer() {
+const port = "3000"
+
+func StartServer(mux *http.ServeMux) {
 	s := &http.Server{
-		Addr: fmt.Sprintf(":%s", port),
+		Addr:    fmt.Sprintf(":%s", port),
+		Handler: mux,
 	}
 	go func() {
 		log.Fatal(s.ListenAndServe())
 	}()
 
+	log.Println("starting banking service on port", port)
 	log.Print("server started, press <Enter> to shutdown")
 	fmt.Scanln()
 	err := s.Shutdown(context.Background())
