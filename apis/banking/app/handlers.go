@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/dmosyan/Learning-Go/apis/banking/app/internal/customer"
 )
 
 func greetHandler(w http.ResponseWriter, r *http.Request) {
@@ -12,7 +14,7 @@ func greetHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func customersHandler(w http.ResponseWriter, r *http.Request) {
-	customers, err := getCustomers()
+	customers, err := customer.GetCustomers()
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)

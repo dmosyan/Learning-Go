@@ -6,8 +6,9 @@ import (
 
 func main() {
 
-	mux := app.RegisterRoutes()
+	router := app.RegisterRoutes()
 
-	app.StartServer(mux)
+	server := app.NewServer(":3000", router)
 
+	app.StartServer(server)
 }

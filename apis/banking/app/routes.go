@@ -1,10 +1,12 @@
 package app
 
-import "net/http"
+import (
+	"github.com/gorilla/mux"
+)
 
-func RegisterRoutes() *http.ServeMux {
+func RegisterRoutes() *mux.Router {
 
-	mux := http.NewServeMux()
+	mux := mux.NewRouter()
 
 	mux.HandleFunc("/", greetHandler)
 	mux.HandleFunc("/customers", customersHandler)

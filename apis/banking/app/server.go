@@ -7,18 +7,20 @@ import (
 	"net/http"
 )
 
-const port = "3000"
-
-func StartServer(mux *http.ServeMux) {
-	s := &http.Server{
-		Addr:    fmt.Sprintf(":%s", port),
-		Handler: mux,
+func NewServer(port string, handler http.Handler) *http.Server {
+	return &http.Server{
+		Addr:    port,
+		Handler: handler,
 	}
+}
+
+func StartServer(s *http.Server) {
+
 	go func() {
 		log.Fatal(s.ListenAndServe())
 	}()
 
-	log.Println("starting banking service on port", port)
+	log.Println("starting banking service on port", s.Addr)
 	log.Print("server started, press <Enter> to shutdown")
 	fmt.Scanln()
 	err := s.Shutdown(context.Background())

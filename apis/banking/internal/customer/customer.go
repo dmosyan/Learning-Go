@@ -1,4 +1,4 @@
-package app
+package customer
 
 import (
 	"encoding/csv"
@@ -15,7 +15,7 @@ type Customer struct {
 	Address   string `json:"address"`
 }
 
-func getCustomers() ([]Customer, error) {
+func GetCustomers() ([]Customer, error) {
 	f, err := os.Open("./testdata/customers.csv")
 	if err != nil {
 		log.Fatal(err)
