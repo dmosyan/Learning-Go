@@ -16,7 +16,7 @@ type Customer struct {
 }
 
 func GetCustomers() ([]Customer, error) {
-	f, err := os.Open("./testdata/customers.csv")
+	f, err := os.Open("../testdata/customers.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
