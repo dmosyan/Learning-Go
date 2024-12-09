@@ -2,19 +2,18 @@ package app
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/dmosyan/Learning-Go/apis/banking/internal/customer"
+	"github.com/dmosyan/Learning-Go/apis/banking/service"
 )
 
-func greetHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello from Banking App")
+type CustomerHandlers struct {
+	service service.CustomerService
 }
 
-func customersHandler(w http.ResponseWriter, r *http.Request) {
-	customers, err := customer.GetCustomers()
+func (ch *CustomerHandlers) customersHandler(w http.ResponseWriter, r *http.Request) {
+	customers, err := ch.service.GetAllCustomer()
 	if err != nil {
 		log.Print(err)
 		w.WriteHeader(http.StatusInternalServerError)
