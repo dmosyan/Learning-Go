@@ -38,7 +38,7 @@ func (d CustomerRepositoryDb) FindAll() ([]Customer, error) {
 
 func NewCustomeRepositoryDb() CustomerRepositoryDb {
 
-	c, err := sql.Open("mysql", "root:password@/dbname")
+	c, err := sql.Open("mysql", "root@tcp(localhost:3306)/banking")
 	if err != nil {
 		panic(err)
 	}
