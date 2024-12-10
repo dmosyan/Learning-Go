@@ -2,10 +2,12 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/dmosyan/Learning-Go/apis/banking/service"
+	"github.com/gorilla/mux"
 )
 
 type CustomerHandlers struct {
@@ -27,7 +29,21 @@ func (ch *CustomerHandlers) customersHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	w.Header().Add("content-type", "application/json")
+	w.Header().Add("Content-type", "application/json")
 	w.Write(data)
 
+}
+
+func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["customer_id"]
+
+	customer, err := ch.service.GetCustomer(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintf(w, err.Error())
+	} else {
+		w.Header().Add("Content-type", "application/json")
+		json.NewEncoder(w).Encode(customer)
+	}
 }
