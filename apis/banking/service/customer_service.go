@@ -6,7 +6,7 @@ import (
 )
 
 type CustomerService interface {
-	GetAllCustomer() ([]domain.Customer, error)
+	GetAllCustomers() ([]domain.Customer, *errs.AppError)
 	GetCustomer(string) (*domain.Customer, *errs.AppError)
 }
 
@@ -14,7 +14,7 @@ type DefaultCustomerService struct {
 	repo domain.CustomerRepository
 }
 
-func (s DefaultCustomerService) GetAllCustomer() ([]domain.Customer, error) {
+func (s DefaultCustomerService) GetAllCustomers() ([]domain.Customer, *errs.AppError) {
 	return s.repo.FindAll()
 }
 

@@ -19,7 +19,7 @@ func RegisterRoutes() *mux.Router {
 		service: service.NewCustomerService(domain.NewCustomeRepositoryDb()),
 	}
 
-	mux.HandleFunc("/customers", ch.customersHandler).Methods(http.MethodGet)
+	mux.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
 	mux.HandleFunc("/customers/{customer_id:[0-9]+}", ch.getCustomer).Methods(http.MethodGet)
 
 	return mux

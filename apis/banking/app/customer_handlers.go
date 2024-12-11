@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/dmosyan/Learning-Go/apis/banking/service"
@@ -13,24 +12,13 @@ type CustomerHandlers struct {
 	service service.CustomerService
 }
 
-func (ch *CustomerHandlers) customersHandler(w http.ResponseWriter, r *http.Request) {
-	customers, err := ch.service.GetAllCustomer()
+func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+	customers, err := ch.service.GetAllCustomers()
 	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+		writeResponse(w, err.Code, err.AsMessage())
+	} else {
+		writeResponse(w, http.StatusOK, customers)
 	}
-
-	data, err := json.Marshal(customers)
-	if err != nil {
-		log.Print(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Add("Content-type", "application/json")
-	w.Write(data)
-
 }
 
 func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +35,7 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 
 func writeResponse(w http.ResponseWriter, code int, data interface{}) {
 	w.WriteHeader(code)
-	w.Header().Add("Content-type", "application/json")
+	w.Header().Add("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(data)
 	if err != nil {
 		panic(err)
