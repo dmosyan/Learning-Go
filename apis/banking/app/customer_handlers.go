@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -40,10 +39,17 @@ func (ch *CustomerHandlers) getCustomer(w http.ResponseWriter, r *http.Request) 
 
 	customer, err := ch.service.GetCustomer(id)
 	if err != nil {
-		w.WriteHeader(err.Code)
-		fmt.Fprintf(w, err.Message)
+		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		w.Header().Add("Content-type", "application/json")
-		json.NewEncoder(w).Encode(customer)
+		writeResponse(w, http.StatusOK, customer)
+	}
+}
+
+func writeResponse(w http.ResponseWriter, code int, data interface{}) {
+	w.WriteHeader(code)
+	w.Header().Add("Content-type", "application/json")
+	err := json.NewEncoder(w).Encode(data)
+	if err != nil {
+		panic(err)
 	}
 }
