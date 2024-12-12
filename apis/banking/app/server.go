@@ -20,7 +20,6 @@ func StartServer(s *http.Server) {
 		log.Fatal(s.ListenAndServe())
 	}()
 
-	log.Println("starting banking service on port", s.Addr)
 	log.Print("server started, press <Enter> to shutdown")
 	fmt.Scanln()
 	err := s.Shutdown(context.Background())
