@@ -38,11 +38,12 @@ func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError
 }
 
 func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
-	customerSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
-	row := d.client.QueryRow(customerSql, id)
-
 	var c Customer
-	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateofBirth, &c.Status)
+
+	customerSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
+
+	err := d.client.Get(&c, customerSql, id)
+
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errs.NewNotFoundError("customer not found")
