@@ -7,6 +7,7 @@ import (
 	"github.com/dmosyan/Learning-Go/apis/banking/errs"
 	"github.com/dmosyan/Learning-Go/apis/banking/logger"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 )
 
 type CustomerRepositoryDb struct {
@@ -34,16 +35,21 @@ func (d CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError
 	}
 
 	customers := make([]Customer, 0)
-	for rows.Next() {
-		var c Customer
-		err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateofBirth, &c.Status)
-		if err != nil {
-			logger.Error("error while scanning customers " + err.Error())
-			return nil, errs.NewUnexpectedError("unexpected database error")
-		}
-
-		customers = append(customers, c)
+	err = sqlx.StructScan(rows, &customers)
+	if err != nil {
+		logger.Error("error while scanning customers " + err.Error())
+		return nil, errs.NewUnexpectedError("unexpected database error")
 	}
+	// for rows.Next() {
+	// 	var c Customer
+	// 	err := rows.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateofBirth, &c.Status)
+	// 	if err != nil {
+	// 		logger.Error("error while scanning customers " + err.Error())
+	// 		return nil, errs.NewUnexpectedError("unexpected database error")
+	// 	}
+
+	// 	customers = append(customers, c)
+	// }
 
 	return customers, nil
 
