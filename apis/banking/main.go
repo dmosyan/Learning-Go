@@ -7,10 +7,6 @@ import (
 
 func main() {
 
-	router := app.RegisterRoutes()
-
-	server := app.NewServer(":3000", router)
-
 	logger.Info("starting the application...")
-	app.StartServer(server)
+	app.Start()
 }
