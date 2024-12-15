@@ -11,8 +11,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func sanityCheck() {
+	if os.Getenv("SERVER_ADDRESS") == "" || os.Getenv("SERVER_PORT") == "" {
+		log.Fatal("server env variable not defined")
+	}
+	if os.Getenv("DB_USER") == "" || os.Getenv("DB_ADDR") == "" ||
+		os.Getenv("DB_PORT") == "" || os.Getenv("DB_NAME") == "" {
+		log.Fatal("db env variables are not defined")
+	}
+}
+
 func Start() {
 
+	sanityCheck()
 	router := mux.NewRouter()
 
 	// ch := CustomerHandlers{
