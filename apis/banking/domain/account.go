@@ -12,5 +12,5 @@ type Account struct {
 }
 
 type AccountRepository interface {
-	Save(Account) (*Account, errs.AppError)
+	Save(Account) (*Account, *errs.AppError)
 }

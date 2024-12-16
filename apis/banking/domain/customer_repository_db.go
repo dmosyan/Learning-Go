@@ -2,9 +2,6 @@ package domain
 
 import (
 	"database/sql"
-	"fmt"
-	"os"
-	"time"
 
 	"github.com/dmosyan/Learning-Go/apis/banking/errs"
 	"github.com/dmosyan/Learning-Go/apis/banking/logger"
@@ -58,22 +55,8 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 	return &c, nil
 }
 
-func NewCustomeRepositoryDb() CustomerRepositoryDb {
-	dbUsr := os.Getenv("DB_USER")
-	dbAddr := os.Getenv("DB_ADDR")
-	dbPort := os.Getenv("DB_PORT")
-	dbName := os.Getenv("DB_NAME")
+func NewCustomeRepositoryDb(dbClient *sqlx.DB) CustomerRepositoryDb {
 
-	dataSrc := fmt.Sprintf("%s@tcp(%s:%s)/%s", dbUsr, dbAddr, dbPort, dbName)
-	c, err := sqlx.Open("mysql", dataSrc)
-	if err != nil {
-		panic(err)
-	}
-	// See "Important settings" section.
-	c.SetConnMaxLifetime(time.Minute * 3)
-	c.SetMaxOpenConns(10)
-	c.SetMaxIdleConns(10)
-
-	return CustomerRepositoryDb{client: c}
+	return CustomerRepositoryDb{client: dbClient}
 
 }

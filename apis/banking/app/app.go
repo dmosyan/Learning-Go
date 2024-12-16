@@ -5,10 +5,12 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/dmosyan/Learning-Go/apis/banking/domain"
 	"github.com/dmosyan/Learning-Go/apis/banking/service"
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 )
 
 func sanityCheck() {
@@ -29,8 +31,11 @@ func Start() {
 	// ch := CustomerHandlers{
 	// 	service: service.NewCustomerService(domain.NewCustomerRepositoryStub()),
 	// }
+	dbClient := getDbClient()
+	customerRepositoryDb := domain.NewCustomeRepositoryDb(dbClient)
+	//accountRepositoryDb := domain.NewAccountRepositoryDb(dbClient)
 	ch := CustomerHandlers{
-		service: service.NewCustomerService(domain.NewCustomeRepositoryDb()),
+		service: service.NewCustomerService(customerRepositoryDb),
 	}
 
 	// define routes
@@ -42,4 +47,23 @@ func Start() {
 
 	// starting server
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", addr, port), router))
+}
+
+func getDbClient() *sqlx.DB {
+	dbUsr := os.Getenv("DB_USER")
+	dbAddr := os.Getenv("DB_ADDR")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
+
+	dataSrc := fmt.Sprintf("%s@tcp(%s:%s)/%s", dbUsr, dbAddr, dbPort, dbName)
+	c, err := sqlx.Open("mysql", dataSrc)
+	if err != nil {
+		panic(err)
+	}
+	// See "Important settings" section.
+	c.SetConnMaxLifetime(time.Minute * 3)
+	c.SetMaxOpenConns(10)
+	c.SetMaxIdleConns(10)
+
+	return c
 }
