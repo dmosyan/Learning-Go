@@ -19,5 +19,5 @@ type AccountRepository interface {
 }
 
 func (a Account) ToNewAccountResponseDto() dto.NewAccountResponse {
-	return dto.NewAccountResponse{a.AccountId}
+	return dto.NewAccountResponse{AccountId: a.AccountId}
 }
