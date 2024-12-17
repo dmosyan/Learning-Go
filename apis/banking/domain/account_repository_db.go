@@ -13,7 +13,7 @@ type AccountRepositoryDb struct {
 }
 
 func (d AccountRepositoryDb) Save(a Account) (*Account, *errs.AppError) {
-	sqlInsert := "INSERT INTO accounts (cuomster_id, opening_date, account_type, amount, status) values (?, ?, ?, ?, ?)"
+	sqlInsert := "INSERT INTO accounts (customer_id, opening_date, account_type, amount, status) values (?, ?, ?, ?, ?)"
 
 	result, err := d.client.Exec(sqlInsert, a.CustomerId, a.OpeningDate, a.AccountType, a.Amount, a.Status)
 	if err != nil {
