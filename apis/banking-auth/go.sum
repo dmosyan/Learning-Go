@@ -1,0 +1,4 @@
+github.com/dmosyan/Learning-Go/apis/banking v0.0.0-20241220172745-542f6a53b482 h1:JZAxXhlck1M8QECeXD9l1flGviJV/JlUzH8Mpgpu4dw=
+github.com/dmosyan/Learning-Go/apis/banking v0.0.0-20241220172745-542f6a53b482/go.mod h1:1RR/HS6KsnZN/DhUz/a05IZmPZpUfOnPoSly9UFfdPc=
+github.com/golang-jwt/jwt v3.2.2+incompatible h1:IfV12K8xAKAnZqdXVzCZ+TOjboZ2keLg81eXfW3O+oY=
+github.com/golang-jwt/jwt v3.2.2+incompatible/go.mod h1:8pz2t5EyA70fFQQSrl6XZXzqecmYZeUEB8OUGHkxJ+I=
