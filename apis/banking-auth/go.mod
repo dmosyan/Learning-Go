@@ -6,3 +6,5 @@ require (
 	github.com/dmosyan/Learning-Go/apis/banking v0.0.0-20241220172745-542f6a53b482
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 )
+
+require github.com/jmoiron/sqlx v1.4.0 // indirect
