@@ -57,3 +57,21 @@ func (d AuthRepositoryDb) GenerateAndSaveRefreshTokenToStore(authToken AuthToken
 	}
 	return refreshToken, nil
 }
+
+func (d AuthRepositoryDb) FindBy(username, password string) (*Login, *errs.AppError) {
+	var login Login
+	sqlVerify := `SELECT username, u.customer_id, role, group_concat(a.account_id) as account_numbers FROM users u
+                  LEFT JOIN accounts a ON a.customer_id = u.customer_id
+                WHERE username = ? and password = ?
+                GROUP BY a.customer_id`
+	err := d.client.Get(&login, sqlVerify, username, password)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errs.NewAuthenticationError("invalid credentials")
+		} else {
+			logger.Error("error while verifying login request from database: " + err.Error())
+			return nil, errs.NewUnexpectedError("Unexpected database error")
+		}
+	}
+	return &login, nil
+}
