@@ -38,3 +38,22 @@ func (d AuthRepositoryDb) RefreshTokenExists(refreshToken string) *errs.AppError
 	}
 	return nil
 }
+
+func (d AuthRepositoryDb) GenerateAndSaveRefreshTokenToStore(authToken AuthToken) (string, *errs.AppError) {
+	var appErr *errs.AppError
+	var refreshToken string
+
+	// generate a new refresh token
+	if refreshToken, appErr = authToken.newRefreshToken(); appErr != nil {
+		return "", appErr
+	}
+
+	// store it in the store
+	sqlInsert := "insert into refresh_token_store (refresh_token) values (?)"
+	_, err := d.client.Exec(sqlInsert, refreshToken)
+	if err != nil {
+		logger.Error("unexpected database error: " + err.Error())
+		return "", errs.NewUnexpectedError("unexpected database error")
+	}
+	return refreshToken, nil
+}
