@@ -4,6 +4,7 @@ import (
 	"github.com/dmosyan/Learning-Go/apis/banking-auth/domain"
 	"github.com/dmosyan/Learning-Go/apis/banking-auth/dto"
 	"github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/errs"
+	"github.com/golang-jwt/jwt"
 )
 
 type AuthService interface {
@@ -40,4 +41,29 @@ func (s DefaultAuthService) Login(req dto.LoginRequest) (*dto.LoginResponse, *er
 	}
 
 	return &dto.LoginResponse{AccessToken: accessToken, RefreshToken: refreshToken}, nil
+}
+
+func (s DefaultAuthService) Refresh(request dto.RefreshTokenRequest) (*dto.LoginResponse, *errs.AppError) {
+	if vErr := request.IsAccessTokenValid(); vErr != nil {
+		if vErr.Errors == jwt.ValidationErrorExpired {
+
+			var appErr *errs.AppError
+			if appErr = s.repo.RefreshTokenExists(request.RefreshToken); appErr != nil {
+				return nil, appErr
+			}
+
+			// generate access token from  refresh token
+			var accessToken string
+			if accessToken, appErr = domain.NewAccessTokenFromRefreshToken(request.RefreshToken); appErr != nil {
+				return nil, appErr
+			}
+
+			return &dto.LoginResponse{AccessToken: accessToken}, nil
+
+		}
+
+		return nil, errs.NewAuthenticationError("invalid token")
+	}
+
+	return nil, errs.NewAuthenticationError("cannot generate a new access token until the current one expires")
 }
