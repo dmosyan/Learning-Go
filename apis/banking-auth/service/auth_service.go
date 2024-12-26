@@ -113,3 +113,7 @@ func jwtTokenFromString(tokenString string) (*jwt.Token, error) {
 	}
 	return token, nil
 }
+
+func NewLoginService(repo domain.AuthRepository, rolePermissions domain.RolePermissions) DefaultAuthService {
+	return DefaultAuthService{repo: repo, rolePermissions: rolePermissions}
+}

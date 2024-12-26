@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/dmosyan/Learning-Go/apis/banking-auth/app"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	app.StartServer()
 }
