@@ -48,6 +48,9 @@ func Start() {
 	router.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.NewAccount).Methods(http.MethodPost)
 	router.HandleFunc("/customers/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", ah.MakeTransaction).Methods(http.MethodPost)
 
+	am := AuthMiddleware{domain.NewAuthRepository()}
+	router.Use(am.authorizationHandler())
+
 	addr := os.Getenv("SERVER_ADDRESS")
 	port := os.Getenv("SERVER_PORT")
 
