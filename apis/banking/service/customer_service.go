@@ -6,6 +6,7 @@ import (
 	"github.com/dmosyan/Learning-Go/apis/banking/errs"
 )
 
+//go:generate mockgen -destination=../mocks/service/customer_service_mock.go -package=service . CustomerService
 type CustomerService interface {
 	GetAllCustomers(string) ([]dto.CustomerResponse, *errs.AppError)
 	GetCustomer(string) (*dto.CustomerResponse, *errs.AppError)
