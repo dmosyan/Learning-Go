@@ -16,7 +16,7 @@ type Account struct {
 	Status      string  `db:"status"`
 }
 
-//go:generate mockgen -destination=../mocks/domain/account_repository_mock.go -package=domain . AccountRepository
+//go:generate mockgen -destination=../mocks/domain/account_repository_mock.go -package=domain github.com/dmosyan/Learning-Go/apis/banking/domain AccountRepository
 type AccountRepository interface {
 	Save(Account) (*Account, *errs.AppError)
 	SaveTransaction(transaction Transaction) (*Transaction, *errs.AppError)
