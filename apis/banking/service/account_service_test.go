@@ -10,6 +10,9 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+var mockRepo *domain.MockAccountRepository
+var service AccountService
+
 func Test_should_return_a_validation_error_response_when_the_request_not_valid(t *testing.T) {
 	// Arrange
 	req := dto.NewAccountRequest{
@@ -29,12 +32,20 @@ func Test_should_return_a_validation_error_response_when_the_request_not_valid(t
 	}
 }
 
+func setup(t *testing.T) func() {
+	ctr := gomock.NewController(t)
+	mockRepo := domain.NewMockAccountRepository(ctr)
+	service = NewAccountService(mockRepo)
+	return func() {
+		ctr.Finish()
+		defer ctr.Finish()
+	}
+}
+
 func Test_should_return_error_from_server_if_account_cannot_be_created(t *testing.T) {
 	// Arrange
-	ctr := gomock.NewController(t)
-	defer ctr.Finish()
-	mockRepo := domain.NewMockAccountRepository(ctr)
-	service := NewAccountService(mockRepo)
+	teardown := setup(t)
+	defer teardown()
 
 	req := dto.NewAccountRequest{
 		CustomerId:  "100",
