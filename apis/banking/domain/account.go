@@ -23,8 +23,8 @@ type AccountRepository interface {
 	FindBy(accountId string) (*Account, *errs.AppError)
 }
 
-func (a Account) ToNewAccountResponseDto() dto.NewAccountResponse {
-	return dto.NewAccountResponse{AccountId: a.AccountId}
+func (a Account) ToNewAccountResponseDto() *dto.NewAccountResponse {
+	return &dto.NewAccountResponse{AccountId: a.AccountId}
 }
 
 func (a Account) CanWithdraw(amount float64) bool {

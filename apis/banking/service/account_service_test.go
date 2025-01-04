@@ -33,12 +33,12 @@ func Test_should_return_a_validation_error_response_when_the_request_not_valid(t
 }
 
 func setup(t *testing.T) func() {
-	ctr := gomock.NewController(t)
-	mockRepo := domain.NewMockAccountRepository(ctr)
+	ctrl := gomock.NewController(t)
+	mockRepo = domain.NewMockAccountRepository(ctrl)
 	service = NewAccountService(mockRepo)
 	return func() {
-		ctr.Finish()
-		defer ctr.Finish()
+		service = nil
+		defer ctrl.Finish()
 	}
 }
 

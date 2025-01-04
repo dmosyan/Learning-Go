@@ -11,7 +11,7 @@ import (
 const dbTSLayout = "2006-01-02 15:04:05"
 
 type AccountService interface {
-	NewAccount(dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
+	NewAccount(request dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError)
 	MakeTransaction(request dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError)
 }
 
@@ -20,28 +20,15 @@ type DefaultAccountService struct {
 }
 
 func (s DefaultAccountService) NewAccount(req dto.NewAccountRequest) (*dto.NewAccountResponse, *errs.AppError) {
-
-	err := req.Validate()
-	if err != nil {
+	if err := req.Validate(); err != nil {
 		return nil, err
 	}
-
-	a := domain.Account{
-		AccountId:   "",
-		CustomerId:  req.CustomerId,
-		OpeningDate: time.Now().Format("2006-01-02 15:04:05"),
-		AccountType: req.AccountType,
-		Status:      "1",
-	}
-
-	newAccount, err := s.repo.Save(a)
-	if err != nil {
+	account := domain.NewAccount(req.CustomerId, req.AccountType, req.Amount)
+	if newAccount, err := s.repo.Save(account); err != nil {
 		return nil, err
+	} else {
+		return newAccount.ToNewAccountResponseDto(), nil
 	}
-
-	response := newAccount.ToNewAccountResponseDto()
-	return &response, nil
-
 }
 
 func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError) {
@@ -76,5 +63,5 @@ func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto
 }
 
 func NewAccountService(repo domain.AccountRepository) DefaultAccountService {
-	return DefaultAccountService{repo: repo}
+	return DefaultAccountService{repo}
 }

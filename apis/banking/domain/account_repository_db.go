@@ -17,29 +17,35 @@ func (d AccountRepositoryDb) Save(a Account) (*Account, *errs.AppError) {
 
 	result, err := d.client.Exec(sqlInsert, a.CustomerId, a.OpeningDate, a.AccountType, a.Amount, a.Status)
 	if err != nil {
-		logger.Error("error while creating a new account: " + err.Error())
-		return nil, errs.NewUnexpectedError("unexpected error from the database")
+		logger.Error("Error while creating new account: " + err.Error())
+		return nil, errs.NewUnexpectedError("Unexpected error from database")
 	}
 
 	id, err := result.LastInsertId()
 	if err != nil {
-		logger.Error("error while getting last insert id for the new account: " + err.Error())
-		return nil, errs.NewUnexpectedError("unexpected error from the database")
+		logger.Error("Error while getting last insert id for new account: " + err.Error())
+		return nil, errs.NewUnexpectedError("Unexpected error from database")
 	}
 	a.AccountId = strconv.FormatInt(id, 10)
 	return &a, nil
 }
 
+/**
+ * transaction = make an entry in the transaction table + update the balance in the accounts table
+ */
 func (d AccountRepositoryDb) SaveTransaction(t Transaction) (*Transaction, *errs.AppError) {
+	// starting the database transaction block
 	tx, err := d.client.Begin()
 	if err != nil {
-		logger.Error("error while starting a transaction for bank account transaction: " + err.Error())
-		return nil, errs.NewUnexpectedError("unexpected error from the database")
+		logger.Error("Error while starting a new transaction for bank account transaction: " + err.Error())
+		return nil, errs.NewUnexpectedError("Unexpected database error")
 	}
 
-	result, _ := tx.Exec(`INSERT INTO transactions (account_id, amount, transaction_type, transaction_date) values (?, ?, ?, ?)`,
-		t.AccountId, t.Amount, t.TransactionType, t.TransactionDate)
+	// inserting bank account transaction
+	result, _ := tx.Exec(`INSERT INTO transactions (account_id, amount, transaction_type, transaction_date) 
+											values (?, ?, ?, ?)`, t.AccountId, t.Amount, t.TransactionType, t.TransactionDate)
 
+	// updating account balance
 	if t.IsWithdrawal() {
 		_, err = tx.Exec(`UPDATE accounts SET amount = amount - ? where account_id = ?`, t.Amount, t.AccountId)
 	} else {
@@ -76,7 +82,6 @@ func (d AccountRepositoryDb) SaveTransaction(t Transaction) (*Transaction, *errs
 	// updating the transaction struct with the latest balance
 	t.Amount = account.Amount
 	return &t, nil
-
 }
 
 func (d AccountRepositoryDb) FindBy(accountId string) (*Account, *errs.AppError) {
@@ -91,5 +96,5 @@ func (d AccountRepositoryDb) FindBy(accountId string) (*Account, *errs.AppError)
 }
 
 func NewAccountRepositoryDb(dbClient *sqlx.DB) AccountRepositoryDb {
-	return AccountRepositoryDb{client: dbClient}
+	return AccountRepositoryDb{dbClient}
 }
