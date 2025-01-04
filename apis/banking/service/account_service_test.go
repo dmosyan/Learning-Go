@@ -70,3 +70,37 @@ func Test_should_return_error_from_server_if_account_cannot_be_created(t *testin
 	}
 
 }
+
+func Test_should_return_new_account_response_when_a_new_account_is_saved_successfully(t *testing.T) {
+	// Arrange
+	teardown := setup(t)
+	defer teardown()
+
+	req := dto.NewAccountRequest{
+		CustomerId:  "100",
+		AccountType: "saving",
+		Amount:      6000,
+	}
+	account := realdomain.Account{
+		CustomerId:  req.CustomerId,
+		OpeningDate: dbTSLayout,
+		AccountType: req.AccountType,
+		Amount:      req.Amount,
+		Status:      "1",
+	}
+
+	accountWithId := account
+	accountWithId.AccountId = "201"
+	mockRepo.EXPECT().Save(account).Return(accountWithId, nil)
+
+	// Act
+	newAccount, appError := service.NewAccount(req)
+
+	// Assert
+	if appError != nil {
+		t.Error("Test failed while creating new account")
+	}
+	if newAccount.AccountId != accountWithId.AccountId {
+		t.Error("Failed while mathching new account id")
+	}
+}
