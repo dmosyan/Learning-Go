@@ -33,8 +33,7 @@ func (s DefaultAccountService) NewAccount(req dto.NewAccountRequest) (*dto.NewAc
 
 func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto.TransactionResponse, *errs.AppError) {
 	// incoming request validation
-	err := req.Validate()
-	if err != nil {
+	if err := req.Validate(); err != nil {
 		return nil, err
 	}
 	// server side validation for checking the available balance in the account
@@ -54,12 +53,13 @@ func (s DefaultAccountService) MakeTransaction(req dto.TransactionRequest) (*dto
 		TransactionType: req.TransactionType,
 		TransactionDate: time.Now().Format(dbTSLayout),
 	}
-	transaction, appError := s.repo.SaveTransaction(t)
-	if appError != nil {
+
+	if transaction, appError := s.repo.SaveTransaction(t); appError != nil {
 		return nil, appError
+	} else {
+		response := transaction.ToDto()
+		return &response, nil
 	}
-	response := transaction.ToDto()
-	return &response, nil
 }
 
 func NewAccountService(repo domain.AccountRepository) DefaultAccountService {
