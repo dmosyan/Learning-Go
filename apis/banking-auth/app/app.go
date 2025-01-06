@@ -63,9 +63,14 @@ func sanityCheck() {
 		"DB_PORT",
 		"DB_NAME",
 	}
+
+	emptyVars := []string{}
 	for _, k := range envProps {
 		if os.Getenv(k) == "" {
-			logger.Error(fmt.Sprintf("environment variable %s not defined. Terminating application...", k))
+			emptyVars = append(emptyVars, k)
 		}
+	}
+	if len(emptyVars) > 0 {
+		logger.Error(fmt.Sprintf("environment variables %s not defined. Terminating application...", emptyVars))
 	}
 }

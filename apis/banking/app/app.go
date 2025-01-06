@@ -9,19 +9,10 @@ import (
 
 	"github.com/dmosyan/Learning-Go/apis/banking/domain"
 	"github.com/dmosyan/Learning-Go/apis/banking/service"
+	"github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/logger"
 	"github.com/gorilla/mux"
 	"github.com/jmoiron/sqlx"
 )
-
-func sanityCheck() {
-	if os.Getenv("SERVER_ADDRESS") == "" || os.Getenv("SERVER_PORT") == "" {
-		log.Fatal("server env variable not defined")
-	}
-	if os.Getenv("DB_USER") == "" || os.Getenv("DB_ADDR") == "" ||
-		os.Getenv("DB_PORT") == "" || os.Getenv("DB_NAME") == "" {
-		log.Fatal("db env variables are not defined")
-	}
-}
 
 func Start() {
 
@@ -55,6 +46,7 @@ func Start() {
 	port := os.Getenv("SERVER_PORT")
 
 	// starting server
+	logger.Info(fmt.Sprintf("starting OAuth server on %s:%s ...", addr, port))
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%s", addr, port), router))
 }
 
@@ -75,4 +67,24 @@ func getDbClient() *sqlx.DB {
 	c.SetMaxIdleConns(10)
 
 	return c
+}
+
+func sanityCheck() {
+	envProps := []string{
+		"SERVER_ADDRESS",
+		"SERVER_PORT",
+		"DB_USER",
+		"DB_ADDR",
+		"DB_PORT",
+	}
+	emptyVars := []string{}
+
+	for _, k := range envProps {
+		if os.Getenv(k) == "" {
+			emptyVars = append(emptyVars, k)
+		}
+	}
+	if len(emptyVars) > 0 {
+		logger.Error(fmt.Sprintf("environment variables %s not defined. Terminating application...", emptyVars))
+	}
 }
