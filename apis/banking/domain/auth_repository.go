@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/dmosyan/Learning-Go/apis/banking/logger"
+	"github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/logger"
 )
 
 type AuthRepository interface {
