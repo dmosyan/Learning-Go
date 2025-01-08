@@ -1,6 +1,8 @@
 package dto
 
-import "github.com/dmosyan/Learning-Go/apis/banking/errs"
+import (
+	errs "github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/errs"
+)
 
 const WITHDRAWAL = "withdrawal"
 const DEPOSIT = "deposit"

@@ -3,7 +3,7 @@ package service
 import (
 	"github.com/dmosyan/Learning-Go/apis/banking/domain"
 	"github.com/dmosyan/Learning-Go/apis/banking/dto"
-	"github.com/dmosyan/Learning-Go/apis/banking/errs"
+	errs "github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/errs"
 )
 
 //go:generate mockgen -destination=../mocks/service/customer_service_mock.go -package=service . CustomerService

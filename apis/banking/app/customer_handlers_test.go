@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/dmosyan/Learning-Go/apis/banking/dto"
-	"github.com/dmosyan/Learning-Go/apis/banking/errs"
 	"github.com/dmosyan/Learning-Go/apis/banking/mocks/service"
+	"github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/errs"
 	"github.com/gorilla/mux"
 	"go.uber.org/mock/gomock"
 )

@@ -5,8 +5,8 @@ import (
 
 	realdomain "github.com/dmosyan/Learning-Go/apis/banking/domain"
 	"github.com/dmosyan/Learning-Go/apis/banking/dto"
-	"github.com/dmosyan/Learning-Go/apis/banking/errs"
 	"github.com/dmosyan/Learning-Go/apis/banking/mocks/domain"
+	errs "github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/errs"
 	"go.uber.org/mock/gomock"
 )
 

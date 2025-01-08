@@ -2,7 +2,7 @@ package domain
 
 import (
 	"github.com/dmosyan/Learning-Go/apis/banking/dto"
-	"github.com/dmosyan/Learning-Go/apis/banking/errs"
+	errs "github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/errs"
 )
 
 type Customer struct {

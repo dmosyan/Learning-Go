@@ -13,7 +13,7 @@ import (
 	reflect "reflect"
 
 	domain "github.com/dmosyan/Learning-Go/apis/banking/domain"
-	errs "github.com/dmosyan/Learning-Go/apis/banking/errs"
+	errs "github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/errs"
 	gomock "go.uber.org/mock/gomock"
 )
 

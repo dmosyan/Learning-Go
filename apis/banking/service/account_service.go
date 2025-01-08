@@ -5,7 +5,7 @@ import (
 
 	"github.com/dmosyan/Learning-Go/apis/banking/domain"
 	"github.com/dmosyan/Learning-Go/apis/banking/dto"
-	"github.com/dmosyan/Learning-Go/apis/banking/errs"
+	errs "github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/errs"
 )
 
 const dbTSLayout = "2006-01-02 15:04:05"

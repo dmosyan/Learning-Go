@@ -3,8 +3,8 @@ package domain
 import (
 	"strconv"
 
-	"github.com/dmosyan/Learning-Go/apis/banking/errs"
-	"github.com/dmosyan/Learning-Go/apis/banking/logger"
+	"github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/errs"
+	"github.com/dmosyan/Learning-Go/apis/shared/pkg/banking-lib/logger"
 	"github.com/jmoiron/sqlx"
 )
 
