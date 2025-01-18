@@ -1,10 +1,13 @@
 package main
 
-import "log"
+import (
+	"github.com/dmosyan/Learning-go/apis/social/internal/env"
+	"log"
+)
 
 func main() {
 	cfg := config{
-		addr: ":3001",
+		addr: env.GetEnv("PORT", "8080"),
 	}
 
 	app := &application{
