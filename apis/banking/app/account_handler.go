@@ -13,6 +13,7 @@ type AccountHandler struct {
 	service service.AccountService
 }
 
+// Hanlder to create a new account (git testing)
 func (h AccountHandler) NewAccount(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	customerId := vars["customer_id"]
