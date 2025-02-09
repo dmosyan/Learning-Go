@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/dmosyan/Learning-Go/apis/social/internal/db"
 	"github.com/dmosyan/Learning-Go/apis/social/internal/env"
 	"github.com/dmosyan/Learning-Go/apis/social/internal/store"
 )
@@ -17,7 +18,13 @@ func main() {
 			maxConnLifetime: env.GetString("DB_MAX_CONN_LIFETIME", "15m"),
 		},
 	}
-	store := store.NewStorage(nil)
+
+	db, err := db.New(cfg.db.addr, cfg.db.maxOpenConns, cfg.db.maxIdleConns, cfg.db.maxConnLifetime)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	store := store.NewStorage(db)
 
 	app := &application{
 		config: cfg,
