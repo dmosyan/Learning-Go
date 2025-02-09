@@ -9,7 +9,13 @@ import (
 
 func main() {
 	cfg := config{
-		addr: env.GetEnv("PORT", ":3000"),
+		addr: env.GetString("PORT", ":3000"),
+		db: dbConfig{
+			addr:            env.GetString("DB_ADDR", "postgres://postgres:postgres@localhost:5432/social?sslmode=disable"),
+			maxOpenConns:    env.GetInt("DB_MAX_OPEN_CONNS", 30),
+			maxIdleConns:    env.GetInt("DB_MAX_IDLE_CONNS", 10),
+			maxConnLifetime: env.GetString("DB_MAX_CONN_LIFETIME", "15m"),
+		},
 	}
 	store := store.NewStorage(nil)
 
